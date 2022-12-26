@@ -1,0 +1,16 @@
+service: cheesy-peas
+
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  region: eu-west-1
+  runtime: nodejs14.x
+
+functions:
+  cheesy:
+    handler: handler.cheesy
+  peas:
+    handler: handler.peas
+  mushy-peas:
+    handler: handler.mushyPeas
