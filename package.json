@@ -8,6 +8,7 @@
   "license": "MIT",
   "private": false,
   "dependencies": {
+    "aws-sdk": "^2.1282.0",
     "serverless": "^3.26.0"
   }
 }

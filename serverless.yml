@@ -6,6 +6,11 @@ provider:
   name: aws
   region: eu-west-1
   runtime: nodejs14.x
+  environment:
+    KMS_KEY_ID: !Ref CheesyPeasKeyAlias
+  iam:
+    role:
+      name: ${self:service}-${sls:stage}-role
 
 functions:
   cheesy:
@@ -14,3 +19,88 @@ functions:
     handler: handler.peas
   mushy-peas:
     handler: handler.mushyPeas
+
+resources:
+  Resources:
+    CheesyPeasKeyAlias:
+        Type: AWS::KMS::Alias
+        Properties:
+          AliasName: 'alias/${self:service}-CheesyPeasKey'
+          TargetKeyId: !Ref CheesyPeasKey
+
+    CheesyPeasKey:
+        Type: AWS::KMS::Key
+        DeletionPolicy: Retain
+        Properties:
+          Description: Key for Cheesy Peas Experiment
+          Enabled: True
+          KeyPolicy:
+            Version: '2012-10-17'
+            Id: cheesy-peas-key
+            Statement:
+              - Sid: Enable IAM policies
+                Effect: 'Allow'
+                Principal:
+                  AWS: { Fn::Join: [ '', [ 'arn:aws:iam::', '${aws:accountId}', ':root' ] ] }
+                Action: 'kms:*'
+                Resource: '*'
+#              - Sid: Allow access for cheesy to encrypt
+#                Effect: 'Allow'
+#                Principal:
+#                  AWS:
+#                    {
+#                      Fn::Join:
+#                        [
+#                          '',
+#                          [
+#                            'arn:aws:sts::',
+#                            '${aws:accountId}',
+#                            ':assumed-role/',
+#                            'lambdaRole/',
+#                            'cheesy',
+#                          ]
+#                        ]
+#                    }
+#                Action:
+#                  - kms:Encrypt
+#                Resource: '*'
+#              - Sid: Allow decrypt for peas function
+#                Effect: 'Allow'
+#                Principal:
+#                  AWS:
+#                    {
+#                      Fn::Join:
+#                        [
+#                          '',
+#                          [
+#                            'arn:aws:sts::',
+#                            '${aws:accountId}',
+#                            ':assumed-role/',
+#                            'lambdaRole/',
+#                            'peas',
+#                          ]
+#                        ]
+#                    }
+#                Action:
+#                  - kms:Decrypt
+#                Resource: '*'
+#              - Sid: Allow access for getJGAccountWhenSNSEvent Lambda
+#                Effect: 'Allow'
+#                Principal:
+#                  AWS:
+#                    {
+#                      Fn::Join:
+#                        [
+#                          '',
+#                          [
+#                            'arn:aws:sts::',
+#                            '${aws:accountId}',
+#                            ':assumed-role/',
+#                            'lambdaRole/',
+#                            'peas',
+#                          ]
+#                        ]
+#                    }
+#                Action:
+#                  - kms:Decrypt
+#                Resource: '*'

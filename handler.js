@@ -1,14 +1,19 @@
 'use strict';
+import KMS  from "aws-sdk/clients/kms"
+
+const kms = new KMS({apiVersion: '2014-11-01'})
 
 module.exports.cheesy = async (event) => {
   const { plainText } = event
-  const cypherText = ''
+  const { CiphertextBlob } = await kms.encrypt({
+    KeyId: `${process.env.KMS_KEY_ID}`,
+    Plaintext: plainText}).promise()
   return {
     statusCode: 200,
     body: JSON.stringify(
       {
         message: `Cheesy has encrypted ${plainText} to ${cypherText}`,
-        cypherText,
+        cypherText: CiphertextBlob.toString(),
         input: event,
       },
       null,
