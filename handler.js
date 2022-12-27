@@ -1,55 +1,59 @@
-'use strict';
-import KMS  from "aws-sdk/clients/kms"
+"use strict"
+const {KMSClient, EncryptCommand, DecryptCommand} = require("@aws-sdk/client-kms");
+const {AWS_REGION, KMS_KEY_ALIAS} = process.env
 
-const kms = new KMS({apiVersion: '2014-11-01'})
+const client = new KMSClient({region: AWS_REGION});
 
 module.exports.cheesy = async (event) => {
+  console.log(event)
   const { plainText } = event
-  const { CiphertextBlob } = await kms.encrypt({
-    KeyId: `${process.env.KMS_KEY_ID}`,
-    Plaintext: plainText}).promise()
+  const command = new EncryptCommand({Plaintext: Buffer.from(plainText), KeyId: KMS_KEY_ALIAS});
+  const response = await client.send(command);
+  const cipherText = response.CiphertextBlob.toString()
   return {
     statusCode: 200,
     body: JSON.stringify(
-      {
-        message: `Cheesy has encrypted ${plainText} to ${cypherText}`,
-        cypherText: CiphertextBlob.toString(),
-        input: event,
-      },
-      null,
-      2
+        {
+          message: `Cheesy has encrypted ${plainText} to ${cipherText}`,
+          cipherText,
+          input: event,
+        },
+        null,
+        2
     ),
-  };
-};
+  }
+}
 
 module.exports.peas = async (event) => {
-  const { cypherText } = event
-  const plainText = ''
+  console.log(event)
+  const {cipherText} = event
+  const plainText = ""
   return {
     statusCode: 200,
     body: JSON.stringify(
         {
-          message: `Peas has decrypted ${cypherText} back to ${plainText}`,
+          message: `Peas has decrypted ${cipherText} back to ${plainText}`,
           input: event,
         },
         null,
         2
     ),
-  };
-};
+  }
+}
 
 module.exports.mushyPeas = async (event) => {
-  const {cypherText} = event
-  const plainText = ''
+  console.log(event)
+  const { cipherText } = event
+  const plainText = ""
   return {
     statusCode: 200,
     body: JSON.stringify(
         {
-          message: `💣DANGER💣! Mushy peas has decrypted ${cypherText} back to ${plainText}`,
+          message: `💣DANGER💣! Mushy peas has decrypted ${cipherText} back to ${plainText} but should not have permissions `,
           input: event,
         },
         null,
         2
     ),
-  };
-};
+  }
+}

@@ -7,7 +7,7 @@ provider:
   region: eu-west-1
   runtime: nodejs14.x
   environment:
-    KMS_KEY_ID: !Ref CheesyPeasKeyAlias
+    KMS_KEY_ALIAS: !Ref CheesyPeasKeyAlias
   iam:
     role:
       name: ${self:service}-${sls:stage}-role
@@ -44,26 +44,26 @@ resources:
                   AWS: { Fn::Join: [ '', [ 'arn:aws:iam::', '${aws:accountId}', ':root' ] ] }
                 Action: 'kms:*'
                 Resource: '*'
-#              - Sid: Allow access for cheesy to encrypt
-#                Effect: 'Allow'
-#                Principal:
-#                  AWS:
-#                    {
-#                      Fn::Join:
-#                        [
-#                          '',
-#                          [
-#                            'arn:aws:sts::',
-#                            '${aws:accountId}',
-#                            ':assumed-role/',
-#                            'lambdaRole/',
-#                            'cheesy',
-#                          ]
-#                        ]
-#                    }
-#                Action:
-#                  - kms:Encrypt
-#                Resource: '*'
+              - Sid: Allow access for cheesy to encrypt
+                Effect: 'Allow'
+                Principal:
+                  AWS:
+                    {
+                      Fn::Join:
+                        [
+                          '',
+                          [
+                            'arn:aws:sts::',
+                            '${aws:accountId}',
+                            ':assumed-role/',
+                            '${self:provider.iam.role.name}/',
+                            '${self:service}-${sls:stage}-cheesy',
+                          ]
+                        ]
+                    }
+                Action:
+                  - kms:Encrypt
+                Resource: '*'
 #              - Sid: Allow decrypt for peas function
 #                Effect: 'Allow'
 #                Principal:

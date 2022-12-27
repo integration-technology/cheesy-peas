@@ -1,14 +1,14 @@
 {
-  "name": "cheesy-peas",
-  "version": "1.0.0",
-  "description": "For testing KMS roles",
-  "main": "index.js",
-  "repository": "https://github.com/integration-technology/cheesy-peas",
-  "author": "Owain McGuire",
-  "license": "MIT",
-  "private": false,
-  "dependencies": {
-    "aws-sdk": "^2.1282.0",
-    "serverless": "^3.26.0"
-  }
+    "name": "cheesy-peas",
+    "version": "1.0.0",
+    "description": "For testing KMS roles",
+    "main": "index.js",
+    "repository": "https://github.com/integration-technology/cheesy-peas",
+    "author": "Owain McGuire",
+    "license": "MIT",
+    "private": false,
+    "dependencies": {
+        "@aws-sdk/client-kms": "^3.238.0",
+        "serverless": "^3.26.0"
+    }
 }
