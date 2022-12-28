@@ -35,6 +35,7 @@ As this was an experiment to check why a larger serverless deployment was failin
 
 ## Note
 
-I also used this to try v3 of `@aws-sdk/client-kms` so there is a little program [Uint8Array.js](Uint8Array.js) which also tests these functions but also shows how to handle the coding and decoding.
+* make sure you have `.env`  file in your root directlry based on [.env.template](.env.template)
+* I also used this to try v3 of `@aws-sdk/client-kms` so there is a little program [Uint8Array.js](Uint8Array.js) which also tests these functions but also shows how to handle the coding and decoding.
 
 

@@ -1,10 +1,11 @@
 service: cheesy-peas
 
 frameworkVersion: '3'
+useDotenv: true
 
 provider:
   name: aws
-  region: eu-west-1
+  region: ${env:AWS_REGION}
   runtime: nodejs14.x
   environment:
     KMS_KEY_ALIAS: !Ref CheesyPeasKeyAlias
