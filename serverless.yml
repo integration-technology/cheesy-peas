@@ -64,43 +64,24 @@ resources:
                 Action:
                   - kms:Encrypt
                 Resource: '*'
-#              - Sid: Allow decrypt for peas function
-#                Effect: 'Allow'
-#                Principal:
-#                  AWS:
-#                    {
-#                      Fn::Join:
-#                        [
-#                          '',
-#                          [
-#                            'arn:aws:sts::',
-#                            '${aws:accountId}',
-#                            ':assumed-role/',
-#                            'lambdaRole/',
-#                            'peas',
-#                          ]
-#                        ]
-#                    }
-#                Action:
-#                  - kms:Decrypt
-#                Resource: '*'
-#              - Sid: Allow access for getJGAccountWhenSNSEvent Lambda
-#                Effect: 'Allow'
-#                Principal:
-#                  AWS:
-#                    {
-#                      Fn::Join:
-#                        [
-#                          '',
-#                          [
-#                            'arn:aws:sts::',
-#                            '${aws:accountId}',
-#                            ':assumed-role/',
-#                            'lambdaRole/',
-#                            'peas',
-#                          ]
-#                        ]
-#                    }
-#                Action:
-#                  - kms:Decrypt
-#                Resource: '*'
+              - Sid: Allow decrypt for peas function
+                Effect: 'Allow'
+                Principal:
+                  AWS:
+                    {
+                      Fn::Join:
+                        [
+                          '',
+                          [
+                            'arn:aws:sts::',
+                            '${aws:accountId}',
+                            ':assumed-role/',
+                            '${self:provider.iam.role.name}/',
+                            '${self:service}-${sls:stage}-peas',
+                          ]
+                        ]
+                    }
+                Action:
+                  - kms:Decrypt
+                Resource: '*'
+
